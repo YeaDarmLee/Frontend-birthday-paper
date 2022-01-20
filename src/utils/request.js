@@ -11,7 +11,9 @@ const request = axios.create({
 })
 // axios 모든 요청 보내기전에 수행
 request.interceptors.request.use(function (config) {
+  console.log(1,config)
   if (store.getters.rftoken) {
+    console.log(2,store.getters)
     config.headers.access_token = getAcToken()
     config.headers.refresh_token = getRfToken()
   }
