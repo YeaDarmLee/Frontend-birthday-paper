@@ -124,11 +124,13 @@ export default {
           if (response.token){
             this.$store.dispatch('RefreshActoken', response.token)
           }
-        } else {
+        } else if (response.code == 40000) {
           this.$store.dispatch('LogOut')
           this.$refs.confirm.open('alert','로그인 만료', response.message).then(() => {
             this.$router.push('/login')
           })
+        } else {
+          console.log(response)
         }
         this.$refs.spinner.close()
       })
