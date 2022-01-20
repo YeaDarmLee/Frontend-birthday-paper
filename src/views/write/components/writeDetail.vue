@@ -14,7 +14,7 @@
               <v-text-field
                 class="p-0"
                 label="닉네임"
-                v-model="nickName"
+                v-model="sendParams.nickName"
                 :rules="rules"
               ></v-text-field>
             </v-row>
@@ -24,7 +24,7 @@
             <v-textarea
               class="p-0"
               label="편지의 내용을 작성해주세요"
-              v-model="magData"
+              v-model="sendParams.magData"
             ></v-textarea>
           </v-card-text>
         </div>
@@ -40,11 +40,14 @@
 
       </v-img>
     </v-dialog>
+
+    <s-confirm ref="confirm"></s-confirm>
+    <s-spinner ref="spinner"></s-spinner>
   </div>
 </template>
 
-
 <script>
+import { sendMessage } from '@/api/letter'
 
 export default {
   name: 'WriteDetail',
@@ -55,11 +58,14 @@ export default {
   data () {
     return {
       writeDetailDialog: false,
-      nickName: '',
-      magData: '',
+      receiver: [],
+      sendParams:{
+        nickName: '',
+        magData: ''
+      },
       rules: [
         value => !!value || '필수값 입니다',
-      ],
+      ]
     }
   },
   created () {
@@ -68,10 +74,20 @@ export default {
   },
   methods: {
     sendMassage() {
-      console.log(this.nickName)
-      console.log(this.magData)
+      this.$refs.spinner.open()
+      sendMessage({receiver: this.receiver, sendParams: this.sendParams}).then(response => {
+        this.$refs.spinner.close()
+        if(response.code == 20000){
+          this.$refs.confirm.open('alert','카드발송 완료', response.message).then(() => {
+            location.reload()
+          })
+        } else {
+          this.$refs.confirm.open('alert','카드발송 실패', response.message)
+        }
+      })
     },
-    open() {
+    open(receiver) {
+      this.receiver = receiver
       this.writeDetailDialog = true
     },
     close() {

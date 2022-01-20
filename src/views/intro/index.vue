@@ -13,7 +13,7 @@
           max-width="125px"
           width="23vw"
           src="@/assets/img/cake.png"
-          @click="goIntro()"></v-img>
+          ></v-img>
         <p class="h6 txtC_474775">BIRTHDAY PAPER</p>
       </v-col>
 
@@ -57,8 +57,8 @@
       <v-btn text color="secondary" @click="goJoin()">
         회원가입
       </v-btn>
-
     </v-row>
+
   </div>
 </template>
 
@@ -71,14 +71,11 @@ export default {
     }
   },
   methods: {
-    goIntro(){
-      this.$router.push('/').catch(() => {})
-    },
     goLogin() {
-      this.$router.push('/login').catch(() => {})
+      this.$router.push('/login')
     },
     goJoin() {
-      this.$router.push('/join').catch(() => {})
+      this.$router.push('/join')
     }
   }
 }

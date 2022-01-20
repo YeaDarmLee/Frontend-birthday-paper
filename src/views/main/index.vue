@@ -19,7 +19,7 @@
 
         <div v-if="totalCount > 0">
           <div class="txtC_474775">
-            <p class="pt-5">♥{{totalCount}}개의 편지가 도착했어요♥</p>
+            <p class="pt-5 main_title">♥{{totalCount}}개의 편지가 도착했어요♥</p>
           </div>
 
           <v-card flat tile>
@@ -28,8 +28,8 @@
                 <v-col no-gutters cols="12" class="mt-2 pl-3 pr-3">
                   <v-row no-gutters>
                     <v-col class="d-inline-block"  v-for="(letter, j) in letter" :key="`card-list-${j}`" @click="openDetail(letter, j)">
-                      <v-img :class="j | setCardDesign" max-width="100" width="16vw" :src="letter.imgUrl">
-                        <div class="senderNm txtC_474775">{{letter.userNm}}</div>
+                      <v-img :class="j | setCardDesign" max-width="100" width="16vw" :src="j | setCardSrc">
+                        <div class="senderNm txtC_474775">{{letter.senderNm}}</div>
                       </v-img>
                     </v-col>
                   </v-row>
@@ -69,7 +69,8 @@
     </v-col>
 
     <card-detail ref="cardDetail"></card-detail>
-
+    <s-confirm ref="confirm"></s-confirm>
+    <s-spinner ref="spinner"></s-spinner>
   </div>
 </template>
 
@@ -79,7 +80,7 @@ import cardDetail from '@/views/main/components/cardDetail'
 import { mdiCheck } from '@mdi/js'
 import { kakaoShare } from '@/utils/share'
 import { setMainCss, setCardDesign, setCardSrc } from '@/utils/filters'
-
+import { getLetterList } from '@/api/letter'
 
 export default {
   name: 'Main',
@@ -102,55 +103,45 @@ export default {
       /* icon */
       icons: {
         mdiCheck
-      },
+      }
     }
   },
   created () {
   },
   mounted() {
+    this.user = this.$store.state.user
     this.getLetterList()
   },
   methods: {
     getLetterList() {
-      var data = {
-        "letterList": [
-          [
-            { idx: 0, userNm: "test1", imgUrl: require('@/assets/img/asset_4.png') },
-            { idx: 1, userNm: "test2", imgUrl: require('@/assets/img/asset_3.png') },
-            { idx: 2, userNm: "test3", imgUrl: require('@/assets/img/asset_2.png') },
-            { idx: 3, userNm: "test4", imgUrl: require('@/assets/img/asset_1.png') },
-            { idx: 4, userNm: "test5", imgUrl: require('@/assets/img/asset_1.png') },
-            { idx: 5, userNm: "test6", imgUrl: require('@/assets/img/asset_2.png') },
-            { idx: 6, userNm: "test7", imgUrl: require('@/assets/img/asset_4.png') },
-            { idx: 7, userNm: "test8", imgUrl: require('@/assets/img/asset_3.png') }
-          ],[
-            { idx: 8, userNm: "test9", imgUrl: require('@/assets/img/asset_4.png') },
-            { idx: 9, userNm: "test10", imgUrl: require('@/assets/img/asset_3.png') },
-            { idx: 10, userNm: "test11", imgUrl: require('@/assets/img/asset_2.png') },
-            { idx: 11, userNm: "test12", imgUrl: require('@/assets/img/asset_1.png') },
-            { idx: 12, userNm: "test13", imgUrl: require('@/assets/img/asset_1.png') },
-            { idx: 13, userNm: "test14", imgUrl: require('@/assets/img/asset_2.png') },
-            { idx: 14, userNm: "test15", imgUrl: require('@/assets/img/asset_4.png') },
-            { idx: 15, userNm: "test16", imgUrl: require('@/assets/img/asset_3.png') }
-          ],[
-            { idx: 16, userNm: "test17", imgUrl: require('@/assets/img/asset_4.png') },
-            { idx: 17, userNm: "test18", imgUrl: require('@/assets/img/asset_3.png') },
-            { idx: 18, userNm: "test19", imgUrl: require('@/assets/img/asset_2.png') },
-            { idx: 19, userNm: "test20", imgUrl: require('@/assets/img/asset_1.png') }
-          ]
-        ],
-        "totalCount": 20,
-        "totalPage": 3
-      }
-      this.totalPage = data.totalPage
-      this.totalCount = data.totalCount
-      this.letterList = data.letterList
+      this.$refs.spinner.open()
+      getLetterList().then(response => {
+        if (response.code == 20000) {
+          this.totalPage = response.data.totalPage
+          this.totalCount = response.data.totalCount
+          this.letterList = response.data.letterList
+
+          if (response.token){
+            this.$store.dispatch('RefreshActoken', response.token)
+          }
+        } else {
+          this.$store.dispatch('LogOut')
+          this.$refs.confirm.open('alert','로그인 만료', response.message).then(() => {
+            this.$router.push('/login')
+          })
+        }
+        this.$refs.spinner.close()
+      })
     },
     openDetail(letter, idx) {
       this.$refs.cardDetail.open(letter, idx)
     },
     shareKakao() {
-      kakaoShare()
+      var shareData = {
+        'nickname': this.user.nickname,
+        'userIdx': this.user.idx
+      }
+      kakaoShare(shareData)
     },
     next () {
       this.pageKey = this.pageKey + 1 === this.totalPage ? 0 : this.pageKey + 1

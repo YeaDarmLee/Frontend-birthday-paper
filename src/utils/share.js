@@ -1,8 +1,9 @@
-export function kakaoShare() {
+export function kakaoShare(data) {
   window.Kakao.Link.sendCustom({
     templateId: 68318,
     templateArgs: {
-      'user':'test'
+      'nickname':data.nickname,
+      'userIdx':data.userIdx
     }
   });
 }

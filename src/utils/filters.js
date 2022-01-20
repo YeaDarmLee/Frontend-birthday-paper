@@ -1,3 +1,11 @@
+import moment from 'moment'
+
+/* 날짜 포맷 YYYY-MM-DD */
+export function dateFormatter(value) {
+  if (value) {
+    return moment(value).add(0,'hour').format('YYYY-MM-DD')
+  }
+}
 
 export function setMainCss(idx){
   var classCss = ''
@@ -13,28 +21,28 @@ export function setCardDesign(idx) {
   var classCss = ''
   switch(idx) {
     case 0:
-      classCss = 'm-auto shadow_eft mt-3'
+      classCss = 'm-auto shadow_eft mt-3 cursor_pointer'
       break
     case 1:
-      classCss = 'm-auto shadow_eft card_angle mt-3'
+      classCss = 'm-auto shadow_eft card_angle mt-3 cursor_pointer'
       break
     case 2:
-      classCss = 'm-auto shadow_eft'
+      classCss = 'm-auto shadow_eft cursor_pointer'
       break
     case 3:
-      classCss = 'm-auto shadow_eft mt-3'
+      classCss = 'm-auto shadow_eft mt-3 cursor_pointer'
       break
     case 4:
-      classCss = 'm-auto shadow_eft mt-4'
+      classCss = 'm-auto shadow_eft mt-4 cursor_pointer'
       break
     case 5:
-      classCss = 'm-auto shadow_eft mt-6'
+      classCss = 'm-auto shadow_eft mt-6 cursor_pointer'
       break
     case 6:
-      classCss = 'm-auto shadow_eft mt-4'
+      classCss = 'm-auto shadow_eft mt-4 cursor_pointer'
       break
     case 7:
-      classCss = 'm-auto shadow_eft card_angle mt-4'
+      classCss = 'm-auto shadow_eft card_angle mt-4 cursor_pointer'
       break
   }
   return classCss
@@ -44,28 +52,20 @@ export function setCardSrc(idx) {
   var imgUrl = ''
   switch(idx) {
     case 0:
-      imgUrl = '@/assets/img/asset_4.png'
+    case 6:
+      imgUrl = require('@/assets/img/asset_4.png')
       break
     case 1:
-      imgUrl = '@/assets/img/asset_3.png'
+    case 7:
+      imgUrl = require('@/assets/img/asset_3.png')
       break
     case 2:
-      imgUrl = '@/assets/img/asset_2.png'
+    case 5:
+      imgUrl = require('@/assets/img/asset_2.png')
       break
     case 3:
-      imgUrl = '@/assets/img/asset_1.png'
-      break
     case 4:
-      imgUrl = '@/assets/img/asset_1.png'
-      break
-    case 5:
-      imgUrl = '@/assets/img/asset_2.png'
-      break
-    case 6:
-      imgUrl = '@/assets/img/asset_4.png'
-      break
-    case 7:
-      imgUrl = '@/assets/img/asset_3.png'
+      imgUrl = require('@/assets/img/asset_1.png')
       break
   }
   return imgUrl

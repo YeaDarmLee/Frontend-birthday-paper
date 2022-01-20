@@ -6,7 +6,7 @@
 <template>
   <div class="header">
     <v-row no-gutters class="text-center mt-2">
-      <v-col cols="8" offset="2" @click="goMain()">
+      <v-col class="cursor_pointer" cols="8" offset="2" @click="goMain()">
         <p class="h6 text_logo mt-5 txtC_474775">BIRTHDAY PAPER</p>
       </v-col>
       <v-col cols="2">
@@ -21,14 +21,24 @@
     >
       <v-row no-gutters class="text-center mt-2">
         <v-col cols="12">
-          <p class="h6 text_logo mt-5 txtC_474775" @click="goMain()">BIRTHDAY PAPER</p>
+          <p class="h6 text_logo mt-5 cursor_pointer txtC_474775" @click="goMain()">BIRTHDAY PAPER</p>
 
-          <v-img class="profile_img mt-1" src="https://randomuser.me/api/portraits/men/78.jpg" @click="goMyPage()"></v-img>
-          <p class="h6 profile_name txtC_474775" @click="goMyPage()">000 님</p>
+          <div v-if="user.idx">
+            <v-img class="profile_img mt-1 cursor_pointer" :src="'data:image/jpeg;base64,'+user.profile" @click="goMyPage()"></v-img>
+            <p class="h6 profile_name cursor_pointer txtC_474775" @click="goMyPage()">{{user.nickname}} 님</p>
 
-          <v-btn text color="secondary" @click="logout()">
-            로그아웃
-          </v-btn>
+            <v-btn text color="secondary" @click="logout()">
+              로그아웃
+            </v-btn>
+          </div>
+
+          <div v-else class="mt-8">
+            <p class="h6 profile_name cursor_pointer txtC_474775">로그인 을 해주세요!</p>
+
+            <v-btn text color="secondary" @click="login()">
+              로그인
+            </v-btn>
+          </div>
         </v-col>
       </v-row>
 
@@ -64,19 +74,23 @@ export default {
   data () {
     return {
       menuDialog: false,
+      user: [],
       items: [
         { icon: 'mdi-circle-small', title: '메인화면', path: '/main' },
-        { icon: 'mdi-circle-small', title: '공지사항', path: '/notice' },
-        { icon: 'mdi-circle-small', title: 'Introduce', path: '/introduce' },
-      ],
+        // { icon: 'mdi-circle-small', title: '공지사항', path: '/notice' },
+        { icon: 'mdi-circle-small', title: 'Introduce', path: '/introduce' }
+      ]
     }
+  },
+  mounted () {
+    this.user = this.$store.state.user
   },
   methods: {
     goMain() {
-      this.$router.push('/main').catch(() => {})
+      this.$router.push('/main')
     },
     goMyPage() {
-      this.$router.push('/myPage').catch(() => {})
+      this.$router.push('/myPage')
     },
     clickMenu(item) {
       if(this.$route.path!==item.path) {
@@ -85,8 +99,13 @@ export default {
         this.toggleDialog()
       }
     },
+    login() {
+      this.$router.push('/login')
+    },
     logout() {
-      console.log('로그아웃버튼')
+      this.$store.dispatch('LogOut').then(() => {
+        this.$router.push('/')
+      })
     },
     toggleDialog() {
       this.menuDialog = !this.menuDialog

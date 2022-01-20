@@ -9,7 +9,7 @@
 
       <v-col no-gutters cols="12" class="text-center mb-5">
         <v-img
-          class="m-auto mt-8 mb-4"
+          class="m-auto mt-8 mb-4 cursor_pointer"
           max-width="125px"
           width="23vw"
           src="@/assets/img/cake.png"
@@ -20,13 +20,13 @@
       <v-col no-gutters cols="12" class="pl-12 pr-12">
         <v-card width="90vw" class="m-auto shadow_eft">
           <v-card-text>
-            <form ref="joinForm">
+            <v-form ref="loginForm">
               <v-row no-gutters>
                 <v-text-field
                   class="m-0 p-0"
-                  v-model="id"
-                  label="ID"
-                  :rules="rules"
+                  v-model="email"
+                  label="EMAIL"
+                  :rules="emailRules"
                   hide-details
                 ></v-text-field>
               </v-row>
@@ -36,7 +36,7 @@
                   v-model="password"
                   label="PW"
                   :type="'password'"
-                  :rules="rules"
+                  :rules="textRules"
                   hide-details
                 ></v-text-field>
               </v-row>
@@ -45,16 +45,19 @@
                   로그인
                 </v-btn>
               </v-row>
-            </form>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-col>
 
       <p class="text-center mt-4 txtC_474775">
-        Don't have an account? <span class="text-decoration-underline" @click="goJoin()">Sign Up.</span>
+        Don't have an account? <span class="text-decoration-underline cursor_pointer" @click="goJoin()">Sign Up.</span>
       </p>
 
     </v-row>
+
+    <s-confirm ref="confirm"></s-confirm>
+    <s-spinner ref="spinner"></s-spinner>
   </div>
 </template>
 
@@ -64,22 +67,42 @@ export default {
   name: 'Login',
   data () {
     return {
-      id: '',
+      email: '',
       password: '',
-      rules: [
-        value => !!value || '필수값 입니다',
+      textRules: [
+				v => !!v || '필수 입력값입니다. 입력해주세요.'
       ],
+      emailRules: [
+				v => !!v || '필수 입력값입니다. 입력해주세요.',
+				v => /.+@.+\..+/.test(v) || '이메일 형식을 확인 해주세요.'
+      ]
     }
   },
   methods: {
     loginStart(){
-      this.$router.push('/main').catch(() => {})
+      if (this.$refs.loginForm.validate()) {
+        this.$refs.spinner.open()
+        this.$store.dispatch('Login', { email: this.email, pw: this.password }).then(response => {
+          this.$refs.spinner.close()
+          if (response.code == 20000) {
+            this.$router.push('/main')
+          } else {
+            this.$refs.confirm.open('alert','로그인 실패',response.message)
+          }
+        }).catch(e => {
+          this.$refs.spinner.close()
+          this.$refs.confirm.open('alert','로그인 실패','로그인에 실패하였습니다.')
+          console.log(e)
+        })
+      } else {
+        this.$refs.confirm.open('alert','로그인 실패','아이디 / 패스워드를 입력해주세요.')
+      }
     },
     goIntro(){
-      this.$router.push('/').catch(() => {})
+      this.$router.push('/')
     },
     goJoin(){
-      this.$router.push('/join').catch(() => {})
+      this.$router.push('/join')
     }
   }
 }
