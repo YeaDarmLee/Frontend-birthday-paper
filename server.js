@@ -7,10 +7,10 @@ const port = process.env.PORT || 3000;
 
 app = express();
 app.use(serveStatic(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(__dirname, '/dist/index.html');
-});
 
+app.get('/write', function (req,res) {
+  console.log('write',req,res)
+});
 app.use(cors());
 app.listen(port);
 
