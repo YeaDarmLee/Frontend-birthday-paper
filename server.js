@@ -9,7 +9,6 @@ const router = require('./router/index');
 
 app = express();
 app.use(serveStatic(path.join(__dirname, 'dist')));
-
 app.use('/write', router);
 
 app.use(cors());
