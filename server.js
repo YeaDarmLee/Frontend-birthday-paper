@@ -5,15 +5,14 @@ const cors = require('cors');
 const path = require('path');
 const port = process.env.PORT || 3000;
 
-app = express();
-// app.use(serveStatic(path.join(__dirname, 'dist')));
+const router = require('./router/index');
 
-// app.get('/write', function (req,res) {
-//   console.log('write',req,res)
-// });
+app = express();
+app.use(serveStatic(path.join(__dirname, 'dist')));
+
+app.use('/write', router);
 
 app.use(cors());
 app.listen(port);
 
-module.app = router;
 console.log('server started '+ port);
