@@ -130,7 +130,7 @@ export default {
             this.$router.push('/login')
           })
         } else {
-          console.log(response)
+          console.log('getLetterList error')
         }
         this.$refs.spinner.close()
       })

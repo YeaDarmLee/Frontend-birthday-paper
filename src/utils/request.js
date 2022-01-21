@@ -12,11 +12,9 @@ const request = axios.create({
 // axios 모든 요청 보내기전에 수행
 request.interceptors.request.use(function (config) {
   if (store.getters.rftoken) {
-    console.log('store',store.getters)
     config.headers.access_token = getAcToken()
     config.headers.refresh_token = getRfToken()
   }
-  console.log('config',config)
   return config;
 }, function (error) {
   return Promise.reject(error);

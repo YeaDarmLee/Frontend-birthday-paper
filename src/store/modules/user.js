@@ -66,7 +66,6 @@ const user = {
       })
     },
     LogOut({ commit, state }) {
-      console.log('logout')
       return new Promise((resolve) => {
         commit('SET_ACTOKEN', '')
         commit('SET_RFTOKEN', '')
