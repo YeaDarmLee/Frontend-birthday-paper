@@ -1,8 +1,8 @@
 const express = require('express');
-// const serveStatic = require("serve-static")
+const serveStatic = require("serve-static")
 
 const cors = require('cors');
-// const path = require('path');
+const path = require('path');
 const port = process.env.PORT || 3000;
 
 app = express();
@@ -15,4 +15,5 @@ app = express();
 app.use(cors());
 app.listen(port);
 
+module.app = router;
 console.log('server started '+ port);
