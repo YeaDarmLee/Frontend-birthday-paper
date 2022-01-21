@@ -63,8 +63,11 @@
         </div>
 
       </v-card>
-      <v-btn text color="secondary" class="mt-6" @click="shareKakao()">
+      <!-- <v-btn text color="secondary" class="mt-6" @click="shareKakao()">
         공유하기
+      </v-btn> -->
+      <v-btn text color="secondary" class="mt-6" @click="writeTest()">
+        작성테스트
       </v-btn>
     </v-col>
 
@@ -130,7 +133,7 @@ export default {
             this.$router.push('/login')
           })
         } else {
-          console.log('getLetterList error')
+          this.$refs.confirm.open('alert','카드정보 조회', response.message)
         }
         this.$refs.spinner.close()
       })
@@ -151,6 +154,9 @@ export default {
     prev () {
       this.pageKey = this.pageKey - 1 < 0 ? this.totalPage - 1 : this.pageKey - 1
     },
+    writeTest() {
+      this.$router.push('/write?userIdx='+this.user.idx)
+    }
   }
 }
 </script>
