@@ -150,7 +150,7 @@ export default {
     },
     prev () {
       this.pageKey = this.pageKey - 1 < 0 ? this.totalPage - 1 : this.pageKey - 1
-    }
+    },
   }
 }
 </script>
